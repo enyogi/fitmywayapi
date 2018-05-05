@@ -11,7 +11,7 @@ namespace FitMyWay.Controllers
 	public class ActivitiesController : ApiController
     {
 		//GetUserActivitySuggestions
-		[HttpPost]
+		[HttpGet]
 		[Route("user/{userId}/all")]
 		public IEnumerable<Library.Activity> GetUserActivitySuggestions(int userId)
 		{
