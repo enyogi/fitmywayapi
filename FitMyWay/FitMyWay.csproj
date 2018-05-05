@@ -180,6 +180,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\ActivitiesController.cs" />
     <Compile Include="Controllers\AthenaController.cs" />
     <Compile Include="Controllers\FitBitController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -187,6 +188,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Library\Activity.cs" />
     <Compile Include="Library\DBConnector.cs" />
     <Compile Include="Library\PlanPrescription.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

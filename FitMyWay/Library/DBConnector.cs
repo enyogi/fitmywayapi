@@ -30,6 +30,23 @@ namespace FitMyWay.Library
 			}
 		}
 
+		//
+		public async Task<IEnumerable<Activity>> GetUserActivitySuggestions(int userId)
+		{
+			const string procedureName = "GetUserActivitySuggestions";
+			var parameters = new DynamicParameters();
+			parameters.Add("@userId", userId);
+
+			return await ExecuteAsync(async conn =>
+			{
+				return await conn.QueryAsync<Activity>(
+					procedureName,
+					parameters,
+					commandType: CommandType.StoredProcedure
+				).ConfigureAwait(false);
+			}).ConfigureAwait(false);
+		}
+
 
 		public async Task<IEnumerable<PlanPrescription>> GetPhysicalPlanPrescriptions(int userId)
 		{
