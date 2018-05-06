@@ -26,11 +26,17 @@ namespace FitMyWay.Controllers
 			APIConnection api = new APIConnection(version, key, secret, practiceid);
 
 			// preview1 /:practiceid / appointments /:appointmentid / notes
-			var path = "/preview1/"+ practiceid + "/appointments/" + "982123" + "/notes";
+			var path =  "/appointments/" + "982123" + "/notes";
 			//application/x-www-form-urlencoded
 
-			var payload = new Dictionary<string, string>();
-			payload.Add("notetext", "Calories Burned In Last 30 Days: 42102. Distance covered: 12 miles. Days Active: 26, Floors Climbed: 13, Points Earned: 86");
+			var payload = new Dictionary<string, string>
+			{
+				{
+					"notetext",
+					"Date Added: " + DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToShortTimeString() +
+				". Calories Burned In Last 30 Days: 42102. Distance covered: 12 miles. Days Active: 26, Floors Climbed: 13, Points Earned: 86"
+				}
+			};
 
 			try
 			{
