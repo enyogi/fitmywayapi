@@ -45,6 +45,7 @@ namespace FitMyWay.Controllers
 			string authUrl = authenticator.GenerateAuthUrl(scopes, null);
 
 			return Redirect(authUrl);
+
 			/*
 			HttpClient client = new HttpClient();
 			client.BaseAddress = new Uri(AccessTokenRefreshURI);
