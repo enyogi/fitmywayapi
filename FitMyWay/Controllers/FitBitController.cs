@@ -1,11 +1,9 @@
 ﻿using FitMyWay.Library;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Web.Http;
+using Fitbit.Api.Portable;
+using System.Configuration;
+using Fitbit.Api.Portable.OAuth2;
 
 namespace FitMyWay.Controllers
 {
@@ -20,33 +18,59 @@ namespace FitMyWay.Controllers
 
 		[HttpGet]
 		[Route("posttoken/code={code}")]
-		public void GetAuthCode(string code)
+		public object GetAuthCode(string code)
 		{
 			var authorization = "Basic Y2xpZW50X2lkOjljZmZlMzg2ZjFiZGQ5NjZjZmZhOTY1OTJhN2NhYzky";
 			var contenttype = "application/x-www-form-urlencoded";
-			var redirectURI = "https://testfit.azurewebsites.net/api/fitbit/auth";
+			var redirectURI = "http://localhost:50195/api/fitbit/callback";
+			//var redirectURI = "https://testfit.azurewebsites.net/api/fitbit/callback";
 			var queryParams = "client_id=" + OAuthClientID + "&grant_type=authorization_code&redirect_uri=" + redirectURI + "&code=" + code;
 
+
+
+			var appCredentials = new FitbitAppCredentials()
+			{
+				ClientId = ConfigurationManager.AppSettings["FitbitClientId"],
+				ClientSecret = ConfigurationManager.AppSettings["FitbitClientSecret"]
+			};
+			//make sure you've set these up in Web.Config under <appSettings>:
+
+			//Session["AppCredentials"] = appCredentials;
+
+			//Provide the App Credentials. You get those by registering your app at dev.fitbit.com
+			//Configure Fitbit authenticaiton request to perform a callback to this constructor's Callback method
+			var authenticator = new OAuth2Helper(appCredentials, redirectURI);
+			string[] scopes = new string[] { "profile","activity","heartrate","location","nutrition","settings","sleep","social","weight" };
+
+			string authUrl = authenticator.GenerateAuthUrl(scopes, null);
+
+			return Redirect(authUrl);
+			/*
 			HttpClient client = new HttpClient();
-			client.BaseAddress = new Uri(AccessTokenRefreshURI + "?" + queryParams);
+			client.BaseAddress = new Uri(AccessTokenRefreshURI);
 
 			client.DefaultRequestHeaders.Accept
 				.Add(new MediaTypeWithQualityHeaderValue(contenttype));//ACCEPT header
 			client.DefaultRequestHeaders.Add("Authorization", authorization);
 
-			HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post,"");
+			HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, queryParams);
 			
-			client.SendAsync(request)
+		    client.SendAsync(request)
 				  .ContinueWith(responseTask =>
 				  {
 					  var response = responseTask.Result;
+					  return response;
 				  });
+
+			return null;
+			*/
 		}
 
-		[HttpPost]
-		[Route("auth")]
-		public void GetAccessTokens([FromBody] Token token)
+		[HttpGet]
+		[Route("callback")]
+		public void GetAccessTokens()
 		{
+			Token token = new Token();
 			var dbConnector = new DBConnector();
 
 			dbConnector.SaveFitBitAccessTokens(token.access_token, token.refresh_token);

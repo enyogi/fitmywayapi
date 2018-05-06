@@ -11,5 +11,7 @@ namespace FitMyWay.Controllers
     {
 		private const string APIKey = "r5838xews2mb4bwzw3d6ds2q";
 		private const string Secret = "yTgYN73HZSzGAvU";
+
+
 	}
 }
