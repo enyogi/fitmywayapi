@@ -13,6 +13,7 @@
 		public int IntensityLevel { get; set; }
 
 		public string ImageURL { get; set; }
+
 		public int Points { get; set; }
 
 		public int ActivityTypeId { get; set; }

@@ -15,18 +15,30 @@ namespace FitMyWay.Library
 			"Initial Catalog=testfit;Persist Security Info=False;User ID=testfit;Password=Ny22quistP;" +
 			"MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
-		public void SaveFitBitAccessTokens(string accessToken, string refreshToken, int userId)
+		public void SaveFitBitAccessTokens(string accessToken, string refreshToken)
 		{
-			const string procedureName = "SaveFitBitTokens";
+			const string procedureName = "SaveFitbitTokens";
 
-			using (var conn = new SqlConnection(connString)) 
-			using (var command = new SqlCommand(procedureName, conn)
+			var parameters = new DynamicParameters();
+			parameters.Add("@accessToken", accessToken);
+			parameters.Add("@refreshToken", refreshToken);
+			
+			using (var connection = new SqlConnection(connString))
 			{
-				CommandType = CommandType.StoredProcedure
-			})
+				connection.Open();
+
+				connection.Execute(procedureName,
+					parameters,
+					commandType: CommandType.StoredProcedure);
+			}
+		}
+
+		public IDictionary<string,string> GetFitbitAccessTokens()
+		{
+			var sql = "Select top 1 fitbitaccesstoken,fitbitrefreshtoken from fituser";
+			using (var conn = new SqlConnection(connString))
 			{
-				conn.Open();
-				command.ExecuteNonQuery();
+				return (IDictionary<string, string>)conn.Query(sql).First();
 			}
 		}
 
