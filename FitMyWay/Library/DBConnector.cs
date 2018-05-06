@@ -35,7 +35,7 @@ namespace FitMyWay.Library
 
 		public IDictionary<string,string> GetFitbitAccessTokens()
 		{
-			var sql = "Select top 1 fitbitaccesstoken,fitbitrefreshtoken from fituser";
+			var sql = "Select top 1 fitbitaccesstoken, fitbitrefreshtoken from fituser";
 			using (var conn = new SqlConnection(connString))
 			{
 				return (IDictionary<string, string>)conn.Query(sql).First();

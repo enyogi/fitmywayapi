@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Web.Http;
 
 namespace FitMyWay.Controllers
@@ -17,19 +18,20 @@ namespace FitMyWay.Controllers
 		private const string OAuthAuthorizationURI = "https://www.fitbit.com/oauth2/authorize";
 		private const string AccessTokenRefreshURI = "https://api.fitbit.com/oauth2/token";
 
-		[HttpPost]
-		[Route("posttoken/?code={code}")]
+		[HttpGet]
+		[Route("posttoken/code={code}")]
 		public void GetAuthCode(string code)
 		{
 			var authorization = "Basic Y2xpZW50X2lkOjljZmZlMzg2ZjFiZGQ5NjZjZmZhOTY1OTJhN2NhYzky";
 			var contenttype = "application/x-www-form-urlencoded";
-			var redirectURI = "https://testfit.azurewebsites.net/api/fitbit/auth/";
+			var redirectURI = "https://testfit.azurewebsites.net/api/fitbit/auth";
 			var queryParams = "client_id=" + OAuthClientID + "&grant_type=authorization_code&redirect_uri=" + redirectURI + "&code=" + code;
 
 			HttpClient client = new HttpClient();
 			client.BaseAddress = new Uri(AccessTokenRefreshURI + "?" + queryParams);
 
-			client.DefaultRequestHeaders.Add("Content-Type", contenttype);
+			client.DefaultRequestHeaders.Accept
+				.Add(new MediaTypeWithQualityHeaderValue(contenttype));//ACCEPT header
 			client.DefaultRequestHeaders.Add("Authorization", authorization);
 
 			HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post,"");
@@ -42,7 +44,7 @@ namespace FitMyWay.Controllers
 		}
 
 		[HttpPost]
-		[Route("auth/")]
+		[Route("auth")]
 		public void GetAccessTokens([FromBody] Token token)
 		{
 			var dbConnector = new DBConnector();
